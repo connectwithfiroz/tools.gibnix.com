@@ -1,0 +1,1 @@
+1. Added - "start": "nodemon server.js" in package.json so automatically reload
