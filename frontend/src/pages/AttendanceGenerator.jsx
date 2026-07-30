@@ -65,39 +65,24 @@ export default function AttendanceGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col font-sans antialiased text-slate-800">
+    <div className="flex-1 max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 ">
 
-      {/* Platform Header Navigation Bar */}
-      <Header/>
+      {/* 1. TOOL WORKSPACE SECTION */}
+      {/* On mobile, order-1 puts this FIRST. On desktop (lg:), order-2 puts it on the RIGHT (8 cols) */}
+      <section className="order-1 lg:order-2 lg:col-span-8 flex flex-col items-center w-full">
 
-      {/* Main Layout Container splitting workspace into dual workflows */}
-      <main className="flex-1 max-w-7xl w-full mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 p-4 md:p-8">
+        {/* Mobile Scroll Hint Banner */}
+        <div className="lg:hidden w-full bg-blue-50 border border-blue-200 text-blue-700 text-xs p-3 rounded-lg mb-4 flex items-center justify-between">
+          <span>👉 Scroll horizontally on the table to view & edit all columns</span>
+        </div>
 
-        {/* LEFT COLUMN: SEO Context and Dynamic Instruction Panel (4 Cols) */}
-        <section className="lg:col-span-4 space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-            <span className="text-xs font-bold text-blue-600 tracking-wider uppercase">Free HR Utility</span>
-            <h1 className="text-2xl font-extrabold text-slate-900 mt-1 mb-3">Interactive Attendance Sheet Generator</h1>
-            <p className="text-sm text-slate-600 leading-relaxed mb-4">
-              Eliminate manual formatting completely. Build professional corporate compliance log sheets instantly. Clean, optimized formulas ensure absolute alignment inside standard print safe boundaries.
-            </p>
-            <div className="border-t border-slate-100 pt-4">
-              <h3 className="text-xs font-bold text-slate-900 tracking-wide uppercase mb-2">💡 Quick UI Instructions:</h3>
-              <ul className="text-xs text-slate-600 space-y-2 list-disc list-inside">
-                <li>Click anywhere directly on the document template preview on the right to edit text values inline.</li>
-                <li>Changes are automatically stored locally inside your browser security scope.</li>
-              </ul>
-            </div>
-          </div>
+        {/* Document Container: Responsive padding & width */}
+        <div className="w-full bg-white p-3 sm:p-6 shadow-md lg:shadow-xl border border-slate-200 rounded-xl min-h-[600px] lg:min-h-[1000px]">
 
+          {/* TABLE WRAPPER: Handles horizontal scrolling smoothly on small screens */}
+          <div className="w-full overflow-x-auto pb-4">
 
-        </section>
-
-        {/* RIGHT COLUMN: Interactive Document Sandbox (8 Cols) */}
-        <section className="lg:col-span-8 flex flex-col items-center">
-          <div className="w-full max-w-[800px] bg-white p-6 shadow-xl border border-slate-200 rounded-xl min-h-[1000px] overflow-x-auto">
-
-            {/* START DOC TABLE WRAPPER */}
+            {/* START DOC TABLE */}
             <table className="w-full border-collapse border-2 border-black text-black font-sans text-sm tracking-tight">
               <tbody>
 
@@ -210,7 +195,7 @@ export default function AttendanceGenerator() {
                 <tr className="bg-slate-50">
                   <td colSpan="5" className="border border-black p-3">
                     <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                      🛠️ Live Holiday Configuration (Edits preview & download file)
+                      Live Holiday Configuration (Edits preview & download file)
                     </label>
                     <textarea
                       value={docData.holidayString}
@@ -220,7 +205,7 @@ export default function AttendanceGenerator() {
                       placeholder="Weekly Off: 7, 14, 21, 28 | Public Holiday (Muharram): 16"
                     />
                     <div className="mt-2 p-2 bg-blue-50/50 rounded-lg border border-blue-100 text-[11px] text-slate-600 leading-relaxed">
-                      <span className="font-bold text-blue-700 block mb-1">💡 How to add holidays:</span>
+                      <span className="font-bold text-blue-700 block mb-1">How to add holidays?:</span>
                       Type the <strong className="text-slate-800">Reason</strong>, add a colon (<strong className="text-slate-800">:</strong>), and list the <strong className="text-slate-800">dates</strong> separated by commas.
                       Use a vertical bar (<strong className="text-slate-800">|</strong>) to add a different reason.
 
@@ -350,11 +335,37 @@ export default function AttendanceGenerator() {
             {/* END DOC TABLE WRAPPER */}
 
           </div>
-        </section>
+        </div>
+      </section>
 
-      </main>
-      <Footer/>
+      {/* 2. SEO & INSTRUCTION SIDEBAR */}
+      {/* On mobile, order-2 puts this SECOND. On desktop (lg:), order-1 puts it on the LEFT (4 cols) */}
+      <section className="order-2 lg:order-1 lg:col-span-4 space-y-6">
+        <div className="bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
+          <span className="text-xs font-bold text-blue-600 tracking-wider uppercase">
+            Free HR Utility
+          </span>
+          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1 mb-3">
+            Interactive Attendance Sheet Generator
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
+            Eliminate manual formatting completely. Build professional corporate compliance log sheets instantly. Clean, optimized formulas ensure absolute alignment inside standard print safe boundaries.
+          </p>
+
+          <div className="border-t border-slate-100 pt-4">
+            <h3 className="text-xs font-bold text-slate-900 tracking-wide uppercase mb-2">
+              💡 Quick UI Instructions:
+            </h3>
+            <ul className="text-xs text-slate-600 space-y-2 list-disc list-inside">
+              <li>Click anywhere directly on the document template preview to edit text values inline.</li>
+              <li>Changes are automatically stored locally inside your browser security scope.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
     </div>
-    
+
+
   );
 }
