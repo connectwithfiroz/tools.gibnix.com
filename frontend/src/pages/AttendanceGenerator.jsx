@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-
+const API_BASE_URL = import.meta.env.API_BASE_URL || 'http://localhost:5000';
+console.log(import.meta.env.VITE_API_URL);
 export default function AttendanceGenerator() {
   // 1. Core State Matrix - Maps exactly to the layout requirements
   const [docData, setDocData] = useState({
@@ -41,7 +42,7 @@ export default function AttendanceGenerator() {
     setIsGenerating(true);
     try {
       // Connects directly to our backend server framework endpoint
-      const response = await fetch('http://localhost:5000/api/generate-attendance', {
+      const response = await fetch(`${API_BASE_URL}/api/generate-attendance`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(docData)
@@ -58,7 +59,7 @@ export default function AttendanceGenerator() {
       linkElement.click();
       linkElement.remove();
     } catch (err) {
-      alert("Error generating file. Check if backend server.js is running on port 5000.");
+      alert("Error generating file.");
     } finally {
       setIsGenerating(false);
     }

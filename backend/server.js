@@ -1,11 +1,57 @@
+
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const docx = require('docx');
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
+const API_BASE_URL = process.env.API_BASE_URL || '';
 
-app.use(cors());
+
 app.use(express.json());
+
+// ---------->>> ALLOW TO ACCESS API FROM ONLY ALLOWED HOST ---------//
+// Fallback to local development URLs if env variable is missing
+const rawOrigins = process.env.ALLOWED_ORIGINS || 'http://localhost:3000,http://localhost:5173';
+const allowedOrigins = rawOrigins.split(',').map(origin => origin.trim());
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow server-to-server / non-browser requests or matching origins
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Blocked by CORS rule'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-API-KEY'],
+  credentials: true
+};
+
+app.use('/api/', cors(corsOptions));
+// ---------->>> ALLOW TO ACCESS API FROM ONLY ALLOWED HOST ---------//
+
+// ------------->>> RATE LIMIT ------------- //
+const rateLimit = require('express-rate-limit');
+//WITHIN 15 MINUTES ONLY 100 REQUEST
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: { error: 'Too many requests, try again later.' }
+});
+app.use('/api/', limiter);
+// -------------<<< RATE LIMIT ------------- //
+
+
+//Health check route for testing purpose
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        status: 'OK', 
+        'api_base_url' : API_BASE_URL,
+        uptime: process.uptime()
+    });
+});
 
 // Helper function to set cell padding consistently (in DXA units)
 function setCellMargins(top, bottom, left, right) {
@@ -118,6 +164,7 @@ app.post('/api/generate-attendance', async (req, res) => {
                         new docx.TableCell({
                             children: [new docx.Paragraph({ children: [new docx.TextRun({ text: String(currentDay), font: "Arial" })], alignment: docx.AlignmentType.CENTER })],
                             width: { size: colWidths[0], type: docx.WidthType.DXA },
+                            shading: { fill: "FAFAFA" },
                             margins: setCellMargins(40, 40, 100, 100)
                         }),
                         new docx.TableCell({
@@ -214,6 +261,8 @@ app.post('/api/generate-attendance', async (req, res) => {
     }
 });
 
+
+
 app.listen(PORT, () => {
-    console.log(`Backend compilation engine online at http://localhost:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
